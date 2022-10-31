@@ -1,4 +1,6 @@
 let scales = 0;
+//object
+
 class constellation {
   constructor(x,y,size,xSpeed,ySpeed) {
     this.x = random(0, width);
@@ -52,9 +54,19 @@ function purpleCursor(x, y) { // pattern from sketch 2
   ellipse(x, y, 20, 90);
   ellipse(x, y, 90, 20);
 };
+function tsparkle(x,y){ // transparent sparkle effect
+  fill(255, 255, 255, 40); 
+  ellipse(x,y, 10, 45);
+  ellipse(x,y, 45, 10);
+  fill(255);
+  ellipse(x,y, 2, 45);
+  ellipse(x,y, 45, 2);
+}
+
 
 //empty array to hold all additional particles pushed up 
 let constellationsALL = [];
+
 
 function setup() {
 
@@ -63,7 +75,6 @@ function setup() {
     constellationsALL.push(new (constellation));
   }
 }
-
 let angle = 0
 function draw() {
   background('#1d204d');
@@ -76,7 +87,6 @@ function draw() {
   angle = angle + 0.1;
   scales = scales + 0.1;
   push();
-
   translate(130,130);
   rotate(angle);
   scale(scales);
@@ -89,13 +99,36 @@ function draw() {
   print(scales);
   purpleCursor(1,1);
   pop();
+
   drawingContext.shadowBlur = 20;
   drawingContext.shadowColor = '#f3cdf7';
 
+  let darkColors = ["#e895cf", "#bb8ed4", "#596ac2", "#38142d", "#ebc7b7"]
+  function spaceCrack(x,y){
+    for (let i=0; i < windowWidth || i < windowHeight; i++) {
+      let randomLeng = random(-100, 100);
+      let colorRandom = darkColors[Math.floor(Math.random()*darkColors.length)];
+      stroke(colorRandom);
+      strokeWeight(2.5);
+      line(x, i, x + randomLeng, i);
+    }
+  }
+  spaceCrack(windowWidth/2,windowHeight);
+  strokeWeight(1);
   for (let i = 0; i < constellationsALL.length; i++) {
     constellationsALL[i].createPoint();
     constellationsALL[i].movePoint();
     constellationsALL[i].joinConstellationsALL(constellationsALL.slice(i));
   }
-  
+  tsparkle(windowWidth - 200, windowHeight -300)
+  tsparkle(windowWidth - 1000, windowHeight -750)
+  tsparkle(windowWidth - 1350, windowHeight -100)
 }
+
+/*
+    for (let i = 0; i < 5; i = i+1){
+    let randomPosW = random(0, windowWidth);
+    let randomPosH = random(0, windowHeight);
+    tsparkle(randomPosW, randomPosH);
+  }
+*/
