@@ -1,5 +1,63 @@
-//object
+function planet(x,y){
+  noStroke()
+  fill(199, 82, 144)
+  ellipse(x,y,500,500);
+  fill(73, 80, 173,6)
+  for(i = 0; i < 100; i++){
+    ellipse(x,y, i*6)
+  }
+}
 
+function asteroid(x,y){
+  stroke(152, 86, 204)// Purple comet (speed)
+  strokeWeight(5)
+  line(80, 75, 260, 185)
+  line(80, 75, 197, 207)
+  noFill()
+  arc(248, 219, 70, 70, radians(160), radians(290))
+  for(i = 0; i < 5; i++){
+    stroke(247, 196, 67) 
+    circle(256, 225, 50) // try to make this yellow later
+  }
+  stroke(232, 77, 123)
+  line(100, 75, 120, 87)
+  stroke(230, 83, 168)
+  line(136, 95, 177, 120)
+  stroke(221, 107, 227)
+  line(189, 127, 260, 170)
+}
+
+class stars{
+  constructor(x,y,xSpeed,ySpeed) {
+    this.x = random(0, width)
+    this.y = random(0, height)
+    this.size = random(2, 10)
+    this.xSpeed = random(-1, 2)
+    this.ySpeed = random(-1, 1)
+  }
+  createStar() {
+    noStroke()
+    push()
+    translate(this.x, this.y)
+      fill(255, 255, 255, 40)
+      ellipse(this.x,this.y, 10, 45)
+      ellipse(this.x,this.y, 45, 10)
+      fill(255)
+      ellipse(this.x,this.y, 2, 45)
+      ellipse(this.x,this.y, 45, 2)
+    pop()
+  }
+  moveStar() {
+    if (this.x < 10 || this.x > 800)
+      this.xSpeed *= -1
+    if (this.y < 10 || this.y > 600)
+      this.ySpeed *= -1
+    this.x += this.xSpeed
+    this.y += this.ySpeed
+  }
+}
+
+//object
 class constellation {
   constructor(x,y,xSpeed,ySpeed) {
     this.x = random(0, width)
@@ -67,10 +125,14 @@ function tsparkle(x,y){
 
 //empty array to hold all additional particles pushed up 
 let constellationsALL = []
+let starsALL = []
 function setup() {
   createCanvas(windowWidth, windowHeight)
   for (let i = 0; i < width / 10; i++) {
     constellationsALL.push(new (constellation))
+  }
+  for (let i = 0; i < 30; i++) {
+    starsALL.push(new (stars))
   }
 }
 let angle = 0
@@ -79,12 +141,16 @@ function draw() {
   print(frameCount)
 
   if (frameCount < 1000){
+    background("#262959")
+    for (let i = 0; i < 30; i++) {
+      starsALL[i].createStar()
+      starsALL[i].moveStar()
+    }
     drawingContext.shadowBlur = 40
     drawingContext.shadowColor = '#ff52ad'
     noStroke();
-    background("#262959")
     fill("#9c366d")
-    beginShape()
+    beginShape() // Terrain
       vertex(0,600)
       vertex(0,900)
       vertex(2000,900)
@@ -122,9 +188,13 @@ function draw() {
       vertex(1383, 570)
       vertex(1500, 600)
     endShape()
-    
+    planet(windowWidth/2, windowHeight/2 - 120)
+    asteroid();
+
 
   }
+    // shooting star maybe? tried but too hard.
+
   if (frameCount > 1000 && frameCount < 1800){
     background('#1d204d')
     for(let i=0; i < width; i=i+10) {
@@ -181,6 +251,7 @@ function draw() {
     tsparkle(windowWidth - 1350, windowHeight -100)
   }
 }
+
 /*
   trying to figure out the random sparkle appearance without it being sporadic
     for (let i = 0; i < 5; i = i+1){
