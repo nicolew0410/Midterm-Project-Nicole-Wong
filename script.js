@@ -8,30 +8,32 @@ function planet(x,y){
   }
 }
 
-function asteroid(x,y){
+let xPos = 50;
+let yPos = 50;
+
+function asteroid(x,y, xPos, yPos){
   stroke(152, 86, 204)// Purple comet (speed)
   strokeWeight(5)
-  line(80, 75, 260, 185)
-  line(80, 75, 197, 207)
+  line(x, y, x+180, y+110)
+  line(x, y, x+117, y+132)
   noFill()
-  arc(248, 219, 70, 70, radians(160), radians(290))
+  arc(x+168, y+144, 70, 70, radians(160), radians(290))
   for(i = 0; i < 5; i++){
     stroke(247, 196, 67) 
-    circle(256, 225, 50) // try to make this yellow later
+    circle(x+176, y+150, 50) // try to make this yellow later
   }
   stroke(232, 77, 123)
-  line(100, 75, 120, 87)
+  line(x+20, y, x+40, y+12)
   stroke(230, 83, 168)
-  line(136, 95, 177, 120)
+  line(x+56, y+25, x+97, y+45)
   stroke(221, 107, 227)
-  line(189, 127, 260, 170)
+  line(x+109, y+54, x+180, y+95)
 }
 
 class stars{
   constructor(x,y,xSpeed,ySpeed) {
     this.x = random(0, width)
     this.y = random(0, height)
-    this.size = random(2, 10)
     this.xSpeed = random(-1, 2)
     this.ySpeed = random(-1, 1)
   }
@@ -56,13 +58,36 @@ class stars{
     this.y += this.ySpeed
   }
 }
+class twinkle{
+  constructor(x,y,xSpeed,ySpeed) {
+    this.x = random(0, width)
+    this.y = random(0, height)
+    this.xSpeed = random(-1, 2)
+    this.ySpeed = random(-1, 1)
+  }
+  createTwinkle() {
+    noStroke()
+    push()
+    translate(this.x, this.y)
+      fill(255);
+      circle(this.x, this.y, 3)
+    pop()
+  }
+  moveTwinkle() {
+    if (this.x < 10 || this.x > 800)
+      this.xSpeed *= -1
+    if (this.y < 10 || this.y > 600)
+      this.ySpeed *= -1
+    this.x += this.xSpeed
+    this.y += this.ySpeed
+  }
+}
 
 //object
 class constellation {
   constructor(x,y,xSpeed,ySpeed) {
     this.x = random(0, width)
     this.y = random(0, height)
-    this.size = random(2, 10)
     this.xSpeed = random(-1, 2)
     this.ySpeed = random(-1, 1)
   }
@@ -126,29 +151,46 @@ function tsparkle(x,y){
 //empty array to hold all additional particles pushed up 
 let constellationsALL = []
 let starsALL = []
+let twinkleALL = []
 function setup() {
   createCanvas(windowWidth, windowHeight)
   for (let i = 0; i < width / 10; i++) {
     constellationsALL.push(new (constellation))
   }
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 40; i++) {
     starsALL.push(new (stars))
+    twinkleALL.push(new(twinkle))
   }
+  for (let i = 0; i < 250; i++) {
+    twinkleALL.push(new(twinkle))
+  }
+
 }
 let angle = 0
 let scales = 0
 function draw() {
   print(frameCount)
 
-  if (frameCount < 1000){
+  if (frameCount < 800){
     background("#262959")
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 40; i++) {
       starsALL[i].createStar()
       starsALL[i].moveStar()
+    }
+    for (let i = 0; i < 250; i++) {
+      twinkleALL[i].createTwinkle()
+      twinkleALL[i].moveTwinkle()
     }
     drawingContext.shadowBlur = 40
     drawingContext.shadowColor = '#ff52ad'
     noStroke();
+    planet(windowWidth/2, windowHeight/2 - 120)
+    if (frameCount > 100 && frameCount < 400){ // shooting star!
+      asteroid(xPos, yPos)
+      xPos+=6;
+      yPos+=2.5;
+    }
+    noStroke()
     fill("#9c366d")
     beginShape() // Terrain
       vertex(0,600)
@@ -188,14 +230,41 @@ function draw() {
       vertex(1383, 570)
       vertex(1500, 600)
     endShape()
-    planet(windowWidth/2, windowHeight/2 - 120)
-    asteroid();
+
+    noStroke()
+    beginShape()
+    fill("#852859")
+    vertex(1450, 610)
+    vertex(1221, 673)
+    vertex(1183, 700)
+    vertex(1343, 723)
+    vertex(1048, 743)
+    vertex(1000, 759)
+    vertex(943, 789)
+    vertex(849, 830)
+    vertex(1450, 830)
+    vertex(1450, 610)
+    endShape()
+    beginShape()
+    vertex(0, 631)
+    vertex(207, 620)
+    vertex(256, 645)
+    vertex(306, 635)
+    vertex(254, 686)
+    vertex(144, 659)
+    vertex(360, 720)
+    vertex(394, 748)
+    vertex(432, 753)
+    vertex(510, 781)
+    vertex(589, 830)
+    vertex(0, 830)
+    vertex(0, 631)
+    endShape()
 
 
   }
-    // shooting star maybe? tried but too hard.
 
-  if (frameCount > 1000 && frameCount < 1800){
+  if (frameCount > 800 && frameCount < 1600){
     background('#1d204d')
     for(let i=0; i < width; i=i+10) {
       for(let j = 0; j < height; j=j+10){
@@ -216,7 +285,7 @@ function draw() {
       if (scales >= 1.3){
         scales = scales - 0.205
       }
-      if (frameCount > 1030 && frameCount < 1800){
+      if (frameCount > 820 && frameCount < 1600){
         purpleCursor(1,1)
       }
       pop()
@@ -224,7 +293,7 @@ function draw() {
     // Blur effect
     drawingContext.shadowBlur = 20
     drawingContext.shadowColor = '#f3cdf7'
-    if (frameCount > 1300 && frameCount < 1600){
+    if (frameCount > 1000 && frameCount < 1300){
      // Space crack that randomizes from diff colors of the array
       let colors = ["#e895cf", "#bb8ed4", "#596ac2", "#38142d", "#ebc7b7"]
       function spaceCrack(x,y){
@@ -251,12 +320,3 @@ function draw() {
     tsparkle(windowWidth - 1350, windowHeight -100)
   }
 }
-
-/*
-  trying to figure out the random sparkle appearance without it being sporadic
-    for (let i = 0; i < 5; i = i+1){
-    let randomPosW = random(0, windowWidth);
-    let randomPosH = random(0, windowHeight);
-    tsparkle(randomPosW, randomPosH);
-  }
-*/
