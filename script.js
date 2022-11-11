@@ -476,7 +476,7 @@ function draw() {
     rocket2()
     astronaut2()
     if (frameCount> 800 && frameCount < 1000){
-      wireConnect()
+      wireConnect()// Wire disconnects once spaceCrack shows
     }
     noStroke()
     pop()
