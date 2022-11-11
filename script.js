@@ -1,3 +1,6 @@
+// Link to Github 
+// https://github.com/nicolew0410/Midterm-Project-Nicole-Wong
+
 let r
 let milkyWay = []
 let planetSpiral = []
@@ -12,6 +15,61 @@ function rocket(){
   fill("#782336")
   ellipse(195, 260, 33,200)
 }
+
+function wireConnect(){
+  let colors = ["#7c98c2", "#c2d4f0", "#9ab3db", "#8bb4f7", "#dbe9ff"]
+  let colorRandom = colors[Math.floor(Math.random()*colors.length)]
+  noFill()
+  stroke(colorRandom)
+  strokeWeight(3)
+  bezier(249, 496, 410, 250, 707, 500, 983, 186)
+}
+
+function rocket2(){
+  noStroke()
+  fill("#284194")
+  triangle(152, 603, 152, 718, 60, 750)
+  triangle(245, 603, 245, 718, 350, 750)
+  beginShape()
+  vertex(148, 720)
+  vertex(250, 720)
+  vertex(250, 430)
+  vertex(148, 430)
+  endShape()
+  ellipse(196, 425, 63,250)
+  fill("#11225c")
+  ellipse(196, 400, 33,100)
+  fill("#284194")
+  rect(166,555, 15, 130)
+  let randomCounter1 = random(40, 50);
+  let randomCounter2 = random(20, 30);
+  fill("#11225c")
+  circle(217, 604, randomCounter1)
+  circle(217, 604, randomCounter2)
+  circle(217, 654, randomCounter2)
+}
+
+function astronaut2(){
+  strokeWeight(3)
+  stroke("#a1b0c7")
+  fill("#e6edf7")
+  ellipse(989, 185, 10, 27)
+  ellipse(997, 185, 10, 35)
+  rect(1000, 124, 50, 80)
+  rect(1010, 147, 10, 46)
+  fill(255)
+  line(1025, 115, 1045, 100)
+  line(1045, 100, 1045, 87)
+  circle(1025,124, 35)
+  circle(1045, 82, 10)
+  let randomCounter1 = random(15, 20);
+  let randomCounter2 = random(5, 10);
+  circle(1035, 160, randomCounter1)
+  circle(1035, 160, randomCounter2)
+  circle(1035, 180, randomCounter2)
+}
+
+
 function astronaut(x,y){
   fill("#ccd7e3")
   stroke("#ccd7e3")
@@ -64,7 +122,7 @@ function asteroid(x,y, xPos, yPos){
   arc(x+168, y+144, 70, 70, radians(160), radians(290))
   for(i = 0; i < 5; i++){
     stroke(247, 196, 67) 
-    circle(x+176, y+150, 50) // try to make this yellow later
+    circle(x+176, y+150, 50)
   }
   stroke(232, 77, 123)
   line(x+20, y, x+40, y+12)
@@ -127,7 +185,6 @@ class twinkle{
   }
 }
 
-//object
 class constellation {
   constructor(x,y,xSpeed,ySpeed) {
     this.x = random(0, width)
@@ -322,9 +379,9 @@ function draw() {
     vertex(0, 830)
     vertex(0, 631)
     endShape()
-
     if (frameCount > 450 && frameCount < 700){
       rocket()
+    }
     if (frameCount > 250 && frameCount < 400){
       push()
       fill(255);
@@ -336,7 +393,7 @@ function draw() {
       pop()
     }
 
-    if (frameCount > 380 && frameCount < 700){
+    if (frameCount > 380 && frameCount < 700){ // Flowerish design on planet
       push()
       translate(windowWidth/2, windowHeight/2-150)
       for (let i = 0; i < TWO_PI; i+=0.001){
@@ -349,7 +406,7 @@ function draw() {
       }
       pop()
     }
-    if (frameCount > 400 && frameCount < 600){
+    if (frameCount > 400 && frameCount < 600){ // Blackhole thing
       push()
       translate(windowWidth/2+500, windowHeight/2-250)
       stroke("#171b4d")
@@ -373,53 +430,71 @@ function draw() {
       for(let j = 0; j < height; j=j+10){
         stroke(180,160,400)
         point(i,j)
-      } 
-    };
-    
-    angle = angle + 0.1
+      } strokeWeight(1)
+    }strokeWeight(1)
+  angle = angle + 0.1
+  scales = scales + 0.1
+  push()
+  translate(130,130)
+  rotate(angle)
+  scale(scales)
+  if (scales > 1.3){
     scales = scales + 0.1
-      push()
-      translate(130,130)
-      rotate(angle)
-      scale(scales)
-      if (scales > 1.3){
-        scales = scales + 0.1
-      }
-      if (scales >= 1.3){
-        scales = scales - 0.205
-      }
-      if (frameCount > 720 && frameCount < 1500){
-        purpleCursor(1,1)
-      }
-      pop()
-    
-    // Blur effect
-    drawingContext.shadowBlur = 20
-    drawingContext.shadowColor = '#f3cdf7'
-    if (frameCount > 900 && frameCount < 1300){
-     // Space crack that randomizes from diff colors of the array
-      let colors = ["#e895cf", "#bb8ed4", "#596ac2", "#38142d", "#ebc7b7"]
-      function spaceCrack(x,y){
-        for (let i=0; i < windowWidth || i < windowHeight; i++) {
-          let randomLeng = random(-100, 100)
-          let colorRandom = colors[Math.floor(Math.random()*colors.length)]
-          stroke(colorRandom)
-          strokeWeight(2.5)
-          line(x, i, x + randomLeng, i)
-        }
-      }
-      spaceCrack(windowWidth/2,windowHeight)
+  }
+  if (scales >= 1.3){
+    scales = scales - 0.205
+  }
+  if (frameCount > 720 && frameCount < 1500){
+    purpleCursor(1,1)
+  }
+  pop()
+  drawingContext.shadowBlur = 25
+  drawingContext.shadowColor = '#f3cdf7'
+  for (let i = 0; i < constellationsALL.length; i++) {
+    constellationsALL[i].createPoint();
+    constellationsALL[i].movePoint();
+    constellationsALL[i].joinConstellationsALL(constellationsALL.slice(i));
+  }
+  tsparkle(windowWidth - 200, windowHeight -500)
+  tsparkle(windowWidth - 1000, windowHeight -750)
+  tsparkle(windowWidth - 900, windowHeight -100)
+  push()
+  translate(windowWidth-20, windowHeight-20)
+  for (let i = 0; i < TWO_PI; i+=0.00025){
+    let q = 400 * cos(100*i)
+    let p = q * cos(i)
+    let l = q *sin(i)
+    stroke("#7376d1")
+    strokeWeight(2.5)
+    point(p,l)
+  }
+  pop()
+  if (frameCount > 800 && frameCount < 1500){
+    push()
+    rotate(0.2)
+    translate(200, -200)
+    rocket2()
+    astronaut2()
+    if (frameCount> 800 && frameCount < 1000){
+      wireConnect()
     }
-    strokeWeight(1)
-    for (let i = 0; i < constellationsALL.length; i++) {
-      constellationsALL[i].createPoint()
-      constellationsALL[i].movePoint()
-      constellationsALL[i].joinConstellationsALL(constellationsALL.slice(i))
+    noStroke()
+    pop()
+  }
+  }
+  if (frameCount > 900 && frameCount < 1300){
+  // Space crack that randomizes from diff colors of the array
+    let darkColors = ["#e895cf", "#bb8ed4", "#596ac2", "#38142d", "#ebc7b7"]
+    function spaceCrack(x,y){
+      for (let i=0; i < windowWidth || i < windowHeight; i++) {
+        let randomLeng = random(-100, 100);
+        let colorRandom = darkColors[Math.floor(Math.random()*darkColors.length)];
+        stroke(colorRandom);
+        strokeWeight(2.5);
+        line(x, i, x + randomLeng, i);
+      }
     }
-     // Set sparkles
-
-    tsparkle(windowWidth - 200, windowHeight -300)
-    tsparkle(windowWidth - 1000, windowHeight -750)
-    tsparkle(windowWidth - 1350, windowHeight -100)
+    spaceCrack(windowWidth/2,windowHeight);
+    strokeWeight(1);
   }
 }
