@@ -1,7 +1,52 @@
+let r
+let milkyWay = []
+let planetSpiral = []
+
+function rocket(){
+  fill("#912a42")
+  triangle(240, 449, 370, 701, 240, 663);
+  triangle(145, 449, 35, 701, 145, 663);
+  fill("#9c4156")
+  rect(145,212, 100, 450)
+  ellipse(195, 310, 55,400)
+  fill("#782336")
+  ellipse(195, 260, 33,200)
+}
+function astronaut(x,y){
+  fill("#ccd7e3")
+  stroke("#ccd7e3")
+  strokeWeight(3)
+  line(windowWidth/2+10, windowHeight/2-30, windowWidth/2+30, windowHeight/2-70)
+  line(windowWidth/2+30, windowHeight/2-70, windowWidth/2+60, windowHeight/2-80)
+  rect(windowWidth/2-65, windowHeight/2, 130, 220)
+  rect(windowWidth/2-50, windowHeight/2+20, 100, 180)
+  rect(windowWidth/2-35, windowHeight/2+30, 15, 150)
+  circle(windowWidth/2+60, windowHeight/2-80, 20)
+  circle(windowWidth/2, windowHeight/2, 100) //head
+  let randomCounter1 = random(30, 40);
+  let randomCounter2 = random(5, 20);
+  circle(windowWidth/2+15, windowHeight/2+90, randomCounter1)
+  circle(windowWidth/2+15, windowHeight/2+90, randomCounter2)
+  circle(windowWidth/2+15, windowHeight/2+140, randomCounter2)
+}
+
 function planet(x,y){
   noStroke()
   fill(199, 82, 144)
-  ellipse(x,y,500,500);
+  ellipse(x,y,300+r,300+r);
+  fill(73, 80, 173,6)
+  for(i = 0; i < 100; i++){
+    ellipse(x,y, i*6)
+  }
+  r = r+2;
+  if(r>400){
+   r = 0;
+  }
+}
+function planet2(x,y){
+  noStroke()
+  fill(199, 82, 144)
+  ellipse(x,y,480, 480);
   fill(73, 80, 173,6)
   for(i = 0; i < 100; i++){
     ellipse(x,y, i*6)
@@ -10,7 +55,6 @@ function planet(x,y){
 
 let xPos = 50;
 let yPos = 50;
-
 function asteroid(x,y, xPos, yPos){
   stroke(152, 86, 204)// Purple comet (speed)
   strokeWeight(5)
@@ -165,13 +209,30 @@ function setup() {
     twinkleALL.push(new(twinkle))
   }
 
+  for(var i=0;i<100;i+=2){
+    for(var o=0;o<100;o+=2){ 
+      let milky=milkyWay.push({
+        x: i+250,
+        y: o+250
+      })
+    }
+  }
+  for(var i=0;i<100;i+=2){
+    for(var o=0;o<100;o+=2){ 
+      let planet3=planetSpiral.push({
+        x: i,
+        y: o
+      })
+    }
+  }
+
 }
 let angle = 0
 let scales = 0
 function draw() {
   print(frameCount)
 
-  if (frameCount < 800){
+  if (frameCount < 700){
     background("#262959")
     for (let i = 0; i < 40; i++) {
       starsALL[i].createStar()
@@ -184,8 +245,9 @@ function draw() {
     drawingContext.shadowBlur = 40
     drawingContext.shadowColor = '#ff52ad'
     noStroke();
-    planet(windowWidth/2, windowHeight/2 - 120)
-    if (frameCount > 100 && frameCount < 400){ // shooting star!
+    planet(windowWidth/2, windowHeight/2 - 150)
+    planet2(windowWidth/2, windowHeight/2 - 150)
+    if (frameCount > 100 && frameCount < 400){
       asteroid(xPos, yPos)
       xPos+=6;
       yPos+=2.5;
@@ -261,10 +323,51 @@ function draw() {
     vertex(0, 631)
     endShape()
 
+    if (frameCount > 450 && frameCount < 700){
+      rocket()
+    if (frameCount > 250 && frameCount < 400){
+      push()
+      fill(255);
+      for(let i=0;i<milkyWay.length;i++){
+        rotate(frameCount*2)
+        let milky=milkyWay[i]
+        ellipse(milky.x,milky.y,2-i/300)
+      }  
+      pop()
+    }
 
-  }
+    if (frameCount > 380 && frameCount < 700){
+      push()
+      translate(windowWidth/2, windowHeight/2-150)
+      for (let i = 0; i < TWO_PI; i+=0.001){
+        let r = 200 * cos(100*i)
+        let x = r * cos(i)
+        let y = r *sin(i)
+        stroke("#623D74")
+        strokeWeight(2.5)
+        point(x,y)
+      }
+      pop()
+    }
+    if (frameCount > 400 && frameCount < 600){
+      push()
+      translate(windowWidth/2+500, windowHeight/2-250)
+      stroke("#171b4d")
+      strokeWeight(1.5)
+      for(let i=0;i<planetSpiral.length;i++){
+        rotate(frameCount*2)
+        let planet3=planetSpiral[i]
+        ellipse(planet3.x,planet3.y,2-i/300)
+      }  
+      pop()
+    }
+    push()
+    astronaut()
+    pop()
+ }
 
-  if (frameCount > 800 && frameCount < 1600){
+
+  if (frameCount > 700 && frameCount < 1500){
     background('#1d204d')
     for(let i=0; i < width; i=i+10) {
       for(let j = 0; j < height; j=j+10){
@@ -285,7 +388,7 @@ function draw() {
       if (scales >= 1.3){
         scales = scales - 0.205
       }
-      if (frameCount > 820 && frameCount < 1600){
+      if (frameCount > 720 && frameCount < 1500){
         purpleCursor(1,1)
       }
       pop()
@@ -293,7 +396,7 @@ function draw() {
     // Blur effect
     drawingContext.shadowBlur = 20
     drawingContext.shadowColor = '#f3cdf7'
-    if (frameCount > 1000 && frameCount < 1300){
+    if (frameCount > 900 && frameCount < 1300){
      // Space crack that randomizes from diff colors of the array
       let colors = ["#e895cf", "#bb8ed4", "#596ac2", "#38142d", "#ebc7b7"]
       function spaceCrack(x,y){
